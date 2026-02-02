@@ -7,13 +7,19 @@ function App() {
   const [role, setRole] = useState("")
   const [email, setEmail] = useState("")
   const [img, setImg] = useState("")
-  const [allusers, setAllusers] = useState([])
+  
+  const localData = JSON.parse(localStorage.getItem("all-users") || '[]')
+
+  const [allusers, setAllusers] = useState(localData)
+
   function formsubmit(e){
     e.preventDefault();
     const newuser = [...allusers];
     newuser.push({title, role, email, img});
+
     setAllusers(newuser);
-    console.log(newuser)
+    localStorage.setItem('all-users', JSON.stringify(newuser));
+
     setImg('');
     setEmail('');
     setRole('');
@@ -22,8 +28,14 @@ function App() {
 
   function removeUser(idx){
     const copyusers = [...allusers];
-    copyusers.splice(idx, 1);
+    const conf = confirm("Are you sure you want to delete this contact?");
+    if(conf){
+      copyusers.splice(idx, 1);
+    }else{
+      alert("element not deleted");
+    }
     setAllusers(copyusers);
+    localStorage.setItem('all-users', JSON.stringify(copyusers))
   }
 
   return <div className="parent h-screen p-5 flex flex-col">
